@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     HAICUAUTORULOTA.RO - Site principal inchiriere autorulote
+     Versiune: Firebase (calendar sincronizat cu cloud)
+
+     STRUCTURA FISIER:
+     1. HEAD        - meta tags SEO, fonturi Google
+     2. CSS/STYLE   - toate stilurile vizuale
+     3. BODY/HTML   - structura paginii (header, sectiuni, footer)
+     4. JAVASCRIPT  - toata logica interactiva
+
+     PENTRU A MODIFICA:
+     - Culori principale  → sectiunea :root din CSS (variabilele --primary etc)
+     - Texte/preturi      → direct in HTML la sectiunile respective
+     - Imagini            → variabila B si arrays EXT/INT/HERO din JS
+     - Date blocate       → panoul admin-calendar-firebase.html
+     - Email contact      → fisierul send-mail.php pe server
+     ============================================================ -->
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>haicuautorulota.ro - Închiriere Autorulotă România</title>
+<meta name="description" content="Închiriază autorulota modernă haicuautorulota.ro și explorează România în confort total. Complet echipată, asigurare inclusă, prețuri de la 100€/zi.">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#3B82F6;
+  --primary-dark:#1D4ED8;
+  --primary-light:#EFF6FF;
+  --green:#4ADE80;
+  --text:#0F172A;
+  --muted:#64748B;
+  --border:#E2E8F0;
+  --bg:#F8FAFC;
+  --white:#fff;
+  --orange:#F97316;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Manrope',sans-serif;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased;margin:0;padding:0}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100}
+.eu-bar{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;height:78px;padding:8px 24px}
+.eu-bar img{height:62px;width:auto;max-width:100%;object-fit:contain}
+.sigle-mobil{display:none}
+header{z-index:100;background:var(--primary);border-bottom:1px solid var(--primary-dark);box-shadow:0 1px 3px rgba(0,0,0,.1);transition:background .3s}
+.topbar-spacer{height:188px}
+.hdr{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:110px;transition:height .3s}
+header.scrolled .hdr{height:54px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo img{height:90px;width:auto;max-width:100%;display:block;transition:height .3s}
+header.scrolled .logo img{height:40px}
+.logo span{font-size:20px;font-weight:700;color:var(--primary)}
+nav a{text-decoration:none;color:rgba(255,255,255,.85);font-size:16px;font-weight:500;padding:8px 12px;border-radius:8px;transition:.2s}
+nav a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.hdr-right{display:flex;align-items:center;gap:16px}
+.tel{display:flex;align-items:center;gap:6px;color:#fff;font-size:14px;font-weight:600;text-decoration:none}
+.tel:hover{color:rgba(255,255,255,.8)}
+.btnp{background:var(--primary);color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:none;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btnp:hover{background:var(--primary-dark)}
+.btnp-light{background:#fff;color:var(--primary)}
+.btnp-light:hover{background:var(--primary-light)}
+.btno{background:transparent;color:var(--text);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:1.5px solid var(--border);transition:.2s;display:inline-flex;align-items:center}
+.btno:hover{border-color:var(--primary);color:var(--primary)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{display:block;width:22px;height:2px;background:#fff;border-radius:2px}
+.mob-menu{display:none;position:fixed;top:188px;left:0;right:0;background:var(--primary);border-bottom:1px solid var(--primary-dark);padding:12px 24px;flex-direction:column;gap:4px;z-index:99}
+.mob-menu.open{display:flex}
+.mob-menu a{color:#fff;text-decoration:none;padding:12px 16px;border-radius:8px;font-weight:500;font-size:16px}
+
+#acasa{background:linear-gradient(135deg,#EFF6FF 0%,#F0F9FF 50%,#F5F3FF 100%);padding:72px 24px}
+.hero{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-stars{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.stars{color:#FBBF24;font-size:18px}
+.hero-title{font-size:52px;font-weight:800;line-height:1.1;margin-bottom:20px}
+.hero-title span{color:var(--primary)}
+.hero-desc{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:32px}
+.hero-btns{display:flex;gap:12px;margin-bottom:48px}
+.hero-stats{display:flex;gap:40px}
+.stat{text-align:left}
+.stat-icon{font-size:26px;color:var(--primary);margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:800}
+.stat-lbl{font-size:13px;color:var(--muted)}
+.slider-wrap{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.15);aspect-ratio:4/3;background:#e2e8f0}
+.slider-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}
+.slider-wrap img.active{opacity:1}
+.snav{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 12px;pointer-events:none}
+.snav button{pointer-events:all;background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:.2s}
+.snav button:hover{background:#fff}
+.sdots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.sdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;border:none;transition:.3s}
+.sdot.active{background:#fff}
+.hero-badge{position:absolute;bottom:16px;right:16px;background:rgba(255,255,255,.95);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+
+.sec{padding:80px 24px}
+.sec-w{max-width:1100px;margin:0 auto}
+.sec-center{text-align:center;margin-bottom:48px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
+.badge-camper{background:#EF4444;color:#fff;font-size:16px;padding:12px 28px;border-radius:30px;box-shadow:0 6px 20px rgba(239,68,68,.35);letter-spacing:.03em;margin-bottom:6px}
+.sec-title{font-size:36px;font-weight:800;margin:14px 0 10px}
+.sec-desc{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.7}
+
+.campers{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto}
+.ccard{border:2px solid var(--border);border-radius:20px;overflow:hidden;cursor:pointer;transition:.25s;background:var(--white)}
+.ccard:hover{border-color:var(--primary);box-shadow:0 8px 32px rgba(59,130,246,.12)}
+.ccard.sel{border-color:var(--primary);box-shadow:0 8px 32px rgba(59,130,246,.2)}
+.ccard-img{position:relative;height:200px;overflow:hidden;background:#e2e8f0}
+.ccard-img img{width:100%;height:100%;object-fit:cover;transition:.3s}
+.ccard:hover .ccard-img img{transform:scale(1.04)}
+.ccard-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent)}
+.ccard-lbl{position:absolute;bottom:14px;left:16px;color:#fff}
+.ccard-lbl h3{font-size:18px;font-weight:700}
+.ccard-lbl p{font-size:13px;opacity:.9}
+.badge-sel{position:absolute;top:12px;right:12px;background:#10B981;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
+.badge-plus{position:absolute;top:12px;right:12px;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.ccard-body{padding:20px}
+.cfeat-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.cicon{width:44px;height:44px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.cicon.orange{background:#FFF7ED}
+.cfeat-title{font-size:16px;font-weight:700}
+.cfeat-sub{font-size:13px;color:var(--muted)}
+.cfeat-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.cfeat-list li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.cfeat-list li::before{content:'⚙';font-size:11px}
+.ccard-foot{display:flex;align-items:center;justify-content:space-between}
+.cprice{font-size:13px;color:var(--muted)}
+.cprice strong{font-size:28px;font-weight:800;color:var(--text);display:block;line-height:1.1}
+.btn-sel{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer;transition:.2s}
+.btn-sel:hover,.btn-sel.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+.sel-label{text-align:center;margin-top:20px;font-size:14px;color:var(--muted)}
+.sel-label strong{color:var(--primary)}
+.btn-avail{display:flex;align-items:center;gap:8px;background:var(--primary);color:#fff;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;border:none;cursor:pointer;margin:20px auto 0;transition:.2s}
+.btn-avail:hover{background:var(--primary-dark)}
+
+.gal-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.gal-col h3{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;margin-bottom:14px}
+.gal-slider{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#e2e8f0;cursor:zoom-in}
+.gal-slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.gal-slider img.active{opacity:1}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none}
+.gnav button{pointer-events:all;background:rgba(255,255,255,.85);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.gnav button:hover{background:#fff}
+.gcap{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}
+.gcap span{color:#fff;font-size:13px;font-weight:600}
+.gdots{display:flex;gap:5px;justify-content:center;margin-top:8px}
+.gdot{width:7px;height:7px;border-radius:50%;background:var(--border);cursor:pointer;border:none;transition:.3s}
+.gdot.active{background:var(--primary)}
+.gcnt{text-align:center;font-size:13px;color:var(--muted);margin-top:6px}
+
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fcard{padding:28px 20px;border:1px solid var(--border);border-radius:16px;text-align:center;transition:.2s}
+.fcard:hover{border-color:var(--primary);box-shadow:0 4px 20px rgba(59,130,246,.1)}
+.ficon{font-size:32px;color:var(--primary);margin-bottom:12px}
+.ftitle{font-size:15px;font-weight:700;margin-bottom:6px}
+.fdesc{font-size:13px;color:var(--muted);line-height:1.6}
+
+.cal-wrap{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.cal-box{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:28px}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.cal-month-name{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:700}
+.cal-navs{display:flex;align-items:center;gap:4px}
+.cal-navs button{background:none;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--muted);transition:.2s;padding:5px 10px}
+.cal-navs button:hover{border-color:var(--primary);color:var(--primary)}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cday-hdr{text-align:center;font-size:12px;font-weight:600;color:var(--muted);padding:8px 0}
+.cday{text-align:center;padding:8px 4px;font-size:14px;font-weight:500;border-radius:10px;cursor:pointer;transition:.2s;border:none;background:none}
+.cday:hover:not(.blocked):not(.past):not(.empty){background:var(--primary-light);color:var(--primary)}
+.cday.today{font-weight:800;color:var(--primary)}
+.cday.sel{background:var(--primary);color:#fff}
+.cday.inrange{background:var(--primary-light);color:var(--primary)}
+.cday.blocked{background:#FEE2E2;color:#EF4444;cursor:not-allowed;text-decoration:line-through}
+.cday.past{color:var(--border);cursor:not-allowed}
+.cday.empty{cursor:default}
+.cal-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.leg-dot{width:12px;height:12px;border-radius:4px}
+.cal-tip{background:#FFFBEB;border:1px solid #FCD34D;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#92400E}
+.cal-side{display:flex;flex-direction:column;gap:14px}
+.side-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:22px}
+.side-title{font-size:15px;font-weight:700;margin-bottom:14px}
+.side-empty{text-align:center;padding:20px 0;color:var(--muted);font-size:14px}
+.side-rows{display:flex;flex-direction:column;gap:10px}
+.side-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)}
+.side-row:last-child{border:none}
+.side-lbl{font-size:13px;color:var(--muted)}
+.side-val{font-size:13px;font-weight:700}
+.price-box{margin-top:10px;padding:14px;background:var(--primary-light);border-radius:12px;text-align:center}
+.price-lbl{font-size:13px;color:var(--primary);font-weight:600}
+.price-val{font-size:28px;font-weight:800;color:var(--primary)}
+.info-card{background:var(--bg);border-radius:16px;padding:18px}
+.info-title{font-size:14px;font-weight:700;margin-bottom:10px}
+.info-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.info-list li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.info-list li::before{content:'●';color:var(--primary);font-size:8px}
+
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pcard{border:2px solid var(--border);border-radius:20px;padding:30px;position:relative;background:var(--white);transition:.2s;display:flex;flex-direction:column;cursor:pointer}
+.pcard:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 12px 32px rgba(59,130,246,.15)}
+.pcard.pop{border-color:var(--primary);box-shadow:0 12px 40px rgba(59,130,246,.2)}
+.pcard.selected{border-color:var(--primary);background:var(--primary-light);box-shadow:0 16px 48px rgba(59,130,246,.25)}
+.pcard.selected .btn-pkg{background:var(--primary)!important;color:#fff!important}
+.pop-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;font-size:12px;font-weight:700;padding:6px 18px;border-radius:20px;white-space:nowrap}
+.pdur{font-size:13px;font-weight:600;color:var(--primary);margin-bottom:10px}
+.pname{font-size:22px;font-weight:800;margin-bottom:6px}
+.pdesc{font-size:14px;color:var(--muted);margin-bottom:18px}
+.pprice{font-size:34px;font-weight:900;line-height:1;margin-bottom:4px;color:var(--text)}
+.pcard.pop .pprice{color:var(--text)}
+.pprice .punit{font-size:16px;font-weight:600;color:var(--muted)}
+.pcard.pop .pprice .punit{color:var(--muted)}
+.pprice .peuro{font-size:23px;font-weight:800;color:var(--primary)}
+.pcard.pop .pprice .peuro{color:var(--primary)}
+.ptrans{font-size:12px;color:var(--muted);margin-bottom:22px;display:flex;align-items:center;gap:4px}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;flex:1}
+.pfeats li{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--muted)}
+.pfeats li::before{content:'✓';color:var(--green);font-weight:800}
+.btn-pkg{width:100%;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:.2s;font-family:'Manrope',sans-serif}
+.btn-dark{background:var(--text);color:#fff}
+.btn-dark:hover{background:#1E293B}
+.btn-blue{background:var(--primary);color:#fff}
+.btn-blue:hover{background:var(--primary-dark)}
+.pinstant{text-align:center;font-size:13px;color:var(--muted);margin-top:10px}
+.incl-box{margin-top:36px;border:1px solid var(--border);border-radius:20px;padding:28px}
+.incl-title{text-align:center;font-size:18px;font-weight:700;margin-bottom:24px}
+.incl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.incl-item{text-align:center}
+.incl-icon{font-size:34px;margin-bottom:8px}
+.incl-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.incl-sub{font-size:13px;color:var(--muted)}
+
+.blog-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.bcard{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:.2s;cursor:pointer}
+.bcard:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-2px)}
+.bcard-img{height:210px;overflow:hidden;background:#e2e8f0}
+.bcard-img img{width:100%;height:100%;object-fit:cover;transition:.3s}
+.bcard:hover .bcard-img img{transform:scale(1.04)}
+.bcard-body{padding:22px}
+.bmeta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.btitle{font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.4}
+.bexcerpt{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.bread{color:var(--primary);font-size:14px;font-weight:600}
+.blog-btn{text-align:center;margin-top:28px}
+
+.contact-grid{display:grid;grid-template-columns:1fr 400px;gap:28px;align-items:start}
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:30px}
+.form-title{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;margin-bottom:18px}
+.camper-banner{background:var(--primary-light);border-radius:12px;padding:13px 17px;display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.camper-banner-icon{font-size:20px;color:var(--primary)}
+.cb-name{font-size:14px;font-weight:700}
+.cb-trans{font-size:12px;color:var(--muted)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.fg input,.fg textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Manrope',sans-serif;color:var(--text);transition:.2s}
+.fg input:focus,.fg textarea:focus{outline:none;border-color:var(--primary)}
+.fg textarea{resize:vertical;min-height:95px}
+.btn-send{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-send:hover{background:var(--primary-dark)}
+.con-side{display:flex;flex-direction:column;gap:14px}
+.cinfo{border:1px solid var(--border);border-radius:20px;padding:22px;background:var(--white)}
+.cinfo-title{font-size:15px;font-weight:700;margin-bottom:16px}
+.cinfo-row{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-bottom:1px solid var(--bg)}
+.cinfo-row:last-child{border:none}
+.cinfo-icon{font-size:18px;color:var(--primary);width:22px;flex-shrink:0;margin-top:1px}
+.cinfo-lbl{font-size:13px;font-weight:700;margin-bottom:2px}
+.cinfo-val{font-size:13px;color:var(--muted)}
+.rapid-card{border:1px solid var(--border);border-radius:20px;padding:22px;background:var(--bg)}
+.rapid-title{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rapid-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.btn-call{width:100%;padding:12px;background:var(--white);border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Manrope',sans-serif;transition:.2s}
+.btn-call:hover{border-color:var(--primary);color:var(--primary)}
+.why-card{border:1px solid var(--border);border-radius:20px;padding:22px;background:var(--white)}
+.why-title{font-size:14px;font-weight:700;margin-bottom:10px}
+.why-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.why-list li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:7px}
+.why-list li::before{content:'●';color:var(--primary);font-size:8px;margin-top:5px;flex-shrink:0}
+.success-box{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:20px;text-align:center;display:none}
+.success-box.show{display:block}
+.success-box h3{color:#166534;font-size:17px;font-weight:700;margin-bottom:6px}
+.success-box p{color:#166534;font-size:14px}
+
+footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
+.ftr{max-width:1280px;margin:0 auto}
+.ftr-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:44px;margin-bottom:36px}
+.ftr-logo{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ftr-logo img{height:64px;width:auto}
+.ftr-logo span{font-size:18px;font-weight:700;color:#fff}
+.ftr-desc{font-size:14px;line-height:1.7;margin-bottom:16px}
+.ftr-socials{display:flex;gap:10px}
+.fsoc{width:34px;height:34px;background:#1E293B;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94A3B8;text-decoration:none;font-size:14px;transition:.2s}
+.fsoc:hover{background:var(--primary);color:#fff}
+.ftr-col-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px}
+.ftr-links{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ftr-links a{color:#94A3B8;text-decoration:none;font-size:14px;transition:.2s}
+.ftr-links a:hover{color:#fff}
+.ftr-contact{display:flex;flex-direction:column;gap:10px}
+.ftr-ci{display:flex;align-items:center;gap:9px;font-size:14px}
+.ftr-ci-icon{font-size:15px;color:var(--primary)}
+.ftr-bottom{border-top:1px solid #1E293B;padding-top:20px;text-align:center;font-size:13px;color:#475569}
+
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999;display:none;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px}
+.lb-close{position:absolute;top:18px;right:22px;background:none;border:none;color:#fff;font-size:30px;cursor:pointer}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;transition:.2s}
+.lb-prev{left:18px}
+.lb-next{right:18px}
+.lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.3)}
+
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr}
+  .hero-title{font-size:40px}
+  .campers,.gal-grid,.price-grid,.contact-grid,.blog-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .ftr-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .incl-grid{grid-template-columns:repeat(2,1fr)}
+  .cal-wrap{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  nav,.hdr-right .tel,.hdr-right .btnp{display:none}
+  .ham{display:flex}
+  .hero-title{font-size:32px}
+  .hero-stats{gap:22px}
+  .sec-title{font-size:26px}
+  .ftr-grid{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  body{padding-top:0}
+  .hdr{height:72px;padding:0 16px}
+  .logo img{height:52px}
+  header.scrolled .hdr{height:60px}
+  header.scrolled .logo img{height:42px}
+  .eu-bar{height:auto;min-height:60px;padding:8px 8px}
+  .eu-bar img{height:auto;width:55%;max-width:55%}
+  .sigle-desktop{display:none}
+  .sigle-mobil{display:block}
+  .topbar-spacer{height:160px}
+  .mob-menu{top:160px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<div class="eu-bar">
+  <img class="sigle-desktop" src="https://haicuautorulota.ro/wp-content/uploads/2026/06/Sigle.svg" alt="Cofinanțat de Uniunea Europeană și Guvernul României" onload="if(window.syncSpacer)syncSpacer()">
+  <img class="sigle-mobil" src="https://haicuautorulota.ro/wp-content/uploads/2026/06/Sigle-telefon.svg" alt="Cofinanțat de Uniunea Europeană și Guvernul României" onload="if(window.syncSpacer)syncSpacer()">
+</div>
+
+<header>
+  <div class="hdr">
+    <a href="#acasa" class="logo">
+      <img id="logoImg" src="" alt="haicuautorulota.ro">
+    </a>
+    <nav>
+      <a href="#acasa">Acasă</a>
+      <a href="#galerie">Galerie</a>
+      <a href="#disponibilitate">Disponibilitate</a>
+      <a href="#preturi">Prețuri</a>
+      <a href="#blog">Blog</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="hdr-right">
+      <a href="tel:+40766199007" class="tel">📞 +4 07766.199.007</a>
+      <a href="#contact" class="btnp btnp-light">Rezervă Acum</a>
+    </div>
+    <button class="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#acasa" onclick="toggleMenu()">Acasă</a>
+    <a href="#galerie" onclick="toggleMenu()">Galerie</a>
+    <a href="#disponibilitate" onclick="toggleMenu()">Disponibilitate</a>
+    <a href="#preturi" onclick="toggleMenu()">Prețuri</a>
+    <a href="#blog" onclick="toggleMenu()">Blog</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+    <a href="tel:+40766199007">📞 +4 07766.199.007</a>
+    <a href="#contact" onclick="toggleMenu()" style="background:#3B82F6;color:#fff;font-weight:700">Rezervă Acum</a>
+  </div>
+</header>
+</div>
+<div class="topbar-spacer"></div>
+
+<section id="acasa">
+  <div class="hero">
+    <div>
+      <div class="hero-stars">
+        <span class="stars">★★★★★</span>
+        <span style="font-size:14px;font-weight:600;color:var(--muted)">4.9/5 din 127 recenzii</span>
+      </div>
+      <h1 class="hero-title">Aventura ta începe<br>cu <span>autorulota<br>noastră</span></h1>
+      <p class="hero-desc">Descoperă România în propriul tău ritm cu autorulota noastră complet echipată. Perfect pentru familii, cupluri sau grup de prieteni care vor să exploreze țara în confort și libertate.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btnp" style="padding:14px 28px;font-size:15px">Rezervă Acum</a>
+        <a href="#galerie" class="btno" style="padding:14px 28px;font-size:15px">Află Mai Multe</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-icon">👥</div><div class="stat-val">2-6</div><div class="stat-lbl">Persoane</div></div>
+        <div class="stat"><div class="stat-icon">📅</div><div class="stat-val">24/7</div><div class="stat-lbl">Disponibilă</div></div>
+        <div class="stat"><div class="stat-icon">📍</div><div class="stat-val">România</div><div class="stat-lbl">Destinații</div></div>
+      </div>
+    </div>
+    <div class="slider-wrap" id="heroWrap">
+      <div class="snav">
+        <button onclick="heroNav(-1)">‹</button>
+        <button onclick="heroNav(1)">›</button>
+      </div>
+      <div class="hero-badge">
+        <span style="color:#10B981;font-size:18px">✅</span>
+        <div>
+          <div style="font-size:13px;font-weight:700">Complet Echipată</div>
+          <div style="font-size:11px;color:var(--muted)">Bucătărie, dormitor, baie</div>
+        </div>
+      </div>
+      <div class="sdots" id="heroDots"></div>
+    </div>
+  </div>
+</section>
+
+<section id="alegere" class="sec" style="background:var(--white)">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sec-center">
+      <span class="badge">PASUL 1</span>
+      <h2 class="sec-title">Alege Autorulota Dorită</h2>
+      <p class="sec-desc">Avem 2 autorulote Benimar S344 Up disponibile. Selectează tipul de cutie de viteze preferat pentru aventura ta.</p>
+    </div>
+    <div class="campers">
+      <div class="ccard sel" id="cardManual" onclick="selectCamper('manual')">
+        <div class="ccard-img">
+          <img id="imgManual" src="" alt="Benimar S344 Up Manual">
+          <div class="ccard-overlay"></div>
+          <div class="ccard-lbl"><h3>Benimar S344 Up</h3><p>Cutie Manuală</p></div>
+          <div class="badge-sel" id="badgeSelManual">✓</div>
+        </div>
+        <div class="ccard-body">
+          <div class="cfeat-hdr">
+            <div class="cicon">⚙️</div>
+            <div><div class="cfeat-title">Manual 6+1</div><div class="cfeat-sub">Control total</div></div>
+          </div>
+          <ul class="cfeat-list">
+            <li>Cutie de viteze manuală 6+1</li>
+            <li>Consum redus de combustibil</li>
+            <li>Motor 2.2L diesel 140CP</li>
+          </ul>
+          <div class="ccard-foot">
+            <div class="cprice">Preț de la<strong>100€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
+            <button class="btn-sel sel" id="btnManual" onclick="selectCamper('manual');event.stopPropagation()">Selectat</button>
+          </div>
+        </div>
+      </div>
+      <div class="ccard" id="cardAutomat" onclick="selectCamper('automat')">
+        <div class="ccard-img">
+          <img id="imgAutomat" src="" alt="Benimar S344 Up Automat">
+          <div class="ccard-overlay"></div>
+          <div class="ccard-lbl"><h3>Benimar S344 Up</h3><p>Cutie Automată</p></div>
+          <div class="badge-plus" id="badgePlusAutomat">+20€/zi</div>
+        </div>
+        <div class="ccard-body">
+          <div class="cfeat-hdr">
+            <div class="cicon orange">🚗</div>
+            <div><div class="cfeat-title">Automat 8 trepte</div><div class="cfeat-sub">Confort maxim</div></div>
+          </div>
+          <ul class="cfeat-list">
+            <li>Cutie automată 8 trepte</li>
+            <li>Confort superior în trafic</li>
+            <li>Motor 2.2L diesel 140CP</li>
+          </ul>
+          <div class="ccard-foot">
+            <div class="cprice">Preț de la<strong>120€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
+            <button class="btn-sel" id="btnAutomat" onclick="selectCamper('automat');event.stopPropagation()">Selectează</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sel-label">⚙️ Ai selectat: <strong id="selLabel">Benimar S344 Up Manual</strong></div>
+    <div style="text-align:center">
+      <button class="btn-avail" onclick="document.getElementById('disponibilitate').scrollIntoView({behavior:'smooth'})">Verifică Disponibilitatea ▾</button>
+    </div>
+  </div>
+</section>
+
+<section id="galerie" class="sec" style="background:var(--bg)">
+  <div class="sec-w">
+    <div class="sec-center">
+      <h2 class="sec-title">Galeria Foto - Autorulota Noastră</h2>
+      <p class="sec-desc">Descoperă în detaliu autorulota noastră modernă și complet echipată. Fiecare spațiu a fost gândit pentru confortul și plăcerea ta.</p>
+    </div>
+    <div class="gal-grid">
+      <div>
+        <h3>🚐 Exterior - Vedere Frontală</h3>
+        <div class="gal-slider" id="extSlider">
+          <div class="gnav">
+            <button onclick="galNav('ext',-1)">‹</button>
+            <button onclick="galNav('ext',1)">›</button>
+          </div>
+          <div class="gcap"><span id="extCap">Vedere Frontală</span></div>
+        </div>
+        <div class="gdots" id="extDots"></div>
+        <div class="gcnt" id="extCnt"></div>
+      </div>
+      <div>
+        <h3>🏠 Interior</h3>
+        <div class="gal-slider" id="intSlider">
+          <div class="gnav">
+            <button onclick="galNav('int',-1)">‹</button>
+            <button onclick="galNav('int',1)">›</button>
+          </div>
+          <div class="gcap"><span id="intCap">Bucătărie Complet Echipată</span></div>
+        </div>
+        <div class="gdots" id="intDots"></div>
+        <div class="gcnt" id="intCnt"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dotari" class="sec" style="background:var(--white)">
+  <div class="sec-w">
+    <div class="sec-center">
+      <h2 class="sec-title">Totul de care ai nevoie pentru o vacanță perfectă</h2>
+      <p class="sec-desc">Autorulota noastră este complet echipată cu toate facilitățile moderne pentru a-ți oferi confortul de acasă oriunde te-ai afla.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard"><div class="ficon">🛏</div><div class="ftitle">Dormitor Confortabil</div><div class="fdesc">Pat dublu cu saltea ortopedică și lenjerie de calitate premium</div></div>
+      <div class="fcard"><div class="ficon">🍳</div><div class="ftitle">Bucătărie Echipată</div><div class="fdesc">Plită, frigider, cuptor cu microunde și toate ustensilele necesare</div></div>
+      <div class="fcard"><div class="ficon">🚿</div><div class="ftitle">Baie Privată</div><div class="fdesc">Duș cu apă caldă, toaletă și toate articolele de igienă</div></div>
+      <div class="fcard"><div class="ficon">📶</div><div class="ftitle">Internet WiFi</div><div class="fdesc">Conexiune internet rapidă pentru a rămâne conectat</div></div>
+      <div class="fcard"><div class="ficon">❄️</div><div class="ftitle">Aer Condiționat</div><div class="fdesc">Sistem de climatizare pentru confort în orice anotimp</div></div>
+      <div class="fcard"><div class="ficon">⚡</div><div class="ftitle">Energie Solară</div><div class="fdesc">Panouri solare pentru energie eco-friendly și autonomie</div></div>
+      <div class="fcard"><div class="ficon">🚗</div><div class="ftitle">Ușor de Condus</div><div class="fdesc">Transmisie automată și sistem de asistență pentru conducere</div></div>
+      <div class="fcard"><div class="ficon">🛡️</div><div class="ftitle">Asigurare Completă</div><div class="fdesc">Asigurare CASCO și asistență rutieră 24/7</div></div>
+      <div class="fcard"><div class="ficon">☕</div><div class="ftitle">Cafetieră</div><div class="fdesc">Espressor integrat pentru cafeaua perfectă dimineața</div></div>
+      <div class="fcard"><div class="ficon">📺</div><div class="ftitle">Smart TV</div><div class="fdesc">Televizor cu Netflix și aplicații de streaming</div></div>
+      <div class="fcard"><div class="ficon">🎵</div><div class="ftitle">Sistem Audio</div><div class="fdesc">Boxe Bluetooth pentru muzica preferată</div></div>
+      <div class="fcard"><div class="ficon">🌅</div><div class="ftitle">Terasă Exterioară</div><div class="fdesc">Copertină automată și mobilier exterior</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="disponibilitate" class="sec" style="background:var(--bg)">
+  <div style="max-width:1000px;margin:0 auto">
+    <div class="sec-center">
+      <span class="badge badge-camper" id="calBadge">⚙️ Este selectat: Benimar S344 Up Manual</span>
+      <h2 class="sec-title">Verifică Disponibilitatea</h2>
+      <p class="sec-desc">Selectează perioada dorită pentru a verifica disponibilitatea autorulotei și pentru a calcula prețul.</p>
+    </div>
+    <div class="cal-wrap">
+      <div class="cal-box">
+        <div class="cal-hdr">
+          <div class="cal-month-name">📅 <span id="calTitle">Februarie 2026</span></div>
+          <div class="cal-navs">
+            <button onclick="calNavYear(-1)">←2025</button>
+            <button onclick="calNavMonth(-1)">‹</button>
+            <button onclick="calNavMonth(1)">›</button>
+            <button onclick="calNavYear(1)">2027→</button>
+          </div>
+        </div>
+        <div class="cgrid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="leg"><div class="leg-dot" style="background:#3B82F6"></div> Selectat</div>
+          <div class="leg"><div class="leg-dot" style="background:#FEE2E2"></div> Ocupat</div>
+          <div class="leg"><div class="leg-dot" style="background:#E2E8F0"></div> Disponibil</div>
+        </div>
+        <div class="cal-tip">💡 <strong>Sfat:</strong> Folosește butoanele "←2025" și "2027→" pentru a naviga între ani.</div>
+      </div>
+      <div class="cal-side">
+        <div class="side-card">
+          <div class="side-title">Perioada Selectată</div>
+          <div id="sideEmpty" class="side-empty"><div style="font-size:32px;color:var(--border);margin-bottom:8px">📅</div>Selectează data de început pentru a vedea disponibilitatea</div>
+          <div id="sideInfo" style="display:none">
+            <div class="side-rows">
+              <div class="side-row"><span class="side-lbl">Check-in</span><span class="side-val" id="sCheckin">-</span></div>
+              <div class="side-row"><span class="side-lbl">Check-out</span><span class="side-val" id="sCheckout">-</span></div>
+              <div class="side-row"><span class="side-lbl">Durata</span><span class="side-val" id="sDuration">-</span></div>
+              <div class="side-row"><span class="side-lbl">Autorulotă</span><span class="side-val" id="sCamper">Manual</span></div>
+            </div>
+            <div class="price-box">
+              <div class="price-lbl">Total estimat</div>
+              <div class="price-val">€<span id="sTotal">0</span></div>
+            </div>
+            <button class="btn-send" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="margin-top:12px">Rezervă Acum →</button>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-title">Informații Importante</div>
+          <ul class="info-list">
+            <li>Check-in: 14:00 - 18:00</li>
+            <li>Check-out: 08:00 - 11:00</li>
+            <li>Rezervare minimă: 2 zile</li>
+            <li>Confirmare instantanee</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="preturi" class="sec" style="background:var(--white)">
+  <div class="sec-w">
+    <div class="sec-center">
+      <span class="badge" id="priceBadge">⚙️ Benimar S344 Up Manual</span>
+      <h2 class="sec-title">Prețuri transparente, fără costuri ascunse</h2>
+      <p class="sec-desc">Alege pachetul care se potrivește perfect cu planurile tale de vacanță. Toate prețurile includ asigurarea și echipamentul complet.</p>
+    </div>
+    <div class="price-grid">
+      <div class="pcard" id="pkg1" onclick="selectPkg(1)">
+        <div class="pdur">📅 2-3 zile</div>
+        <div class="pname">Weekend Scurt</div>
+        <div class="pdesc">Perfect pentru o escapadă de weekend</div>
+        <div class="pprice"><span id="p1">150</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
+        <div class="ptrans">⚙️ <span id="pt1">Cutie manuală</span></div>
+        <ul class="pfeats">
+          <li>Combustibil inclus (200 km/zi)</li>
+          <li>Asigurare CASCO</li>
+          <li>Echipament complet</li>
+          <li>Asistență rutieră 24/7</li>
+          <li>Curățenie finală</li>
+        </ul>
+        <button class="btn-pkg btn-dark" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Weekend Scurt</button>
+        <div class="pinstant">🕐 Rezervare instantanee</div>
+      </div>
+      <div class="pcard pop selected" id="pkg2" onclick="selectPkg(2)">
+        <div class="pop-badge">Cel mai popular</div>
+        <div class="pdur">📅 7 zile</div>
+        <div class="pname">Săptămâna Aventurii</div>
+        <div class="pdesc">Cea mai populară opțiune pentru vacanțe</div>
+        <div class="pprice"><span id="p2">120</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
+        <div class="ptrans">⚙️ <span id="pt2">Cutie manuală</span></div>
+        <ul class="pfeats">
+          <li>Combustibil inclus (250 km/zi)</li>
+          <li>Asigurare CASCO</li>
+          <li>Echipament complet</li>
+          <li>Asistență rutieră 24/7</li>
+          <li>Curățenie finală</li>
+          <li>GPS cu hărți offline</li>
+          <li>Kit de întreținere inclus</li>
+        </ul>
+        <button class="btn-pkg btn-blue" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Săptămâna Aventurii</button>
+        <div class="pinstant">🕐 Rezervare instantanee</div>
+      </div>
+      <div class="pcard" id="pkg3" onclick="selectPkg(3)">
+        <div class="pdur">📅 14+ zile</div>
+        <div class="pname">Vacanța Lungă</div>
+        <div class="pdesc">Pentru cei care vor să exploreze în detaliu</div>
+        <div class="pprice"><span id="p3">100</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
+        <div class="ptrans">⚙️ <span id="pt3">Cutie manuală</span></div>
+        <ul class="pfeats">
+          <li>Combustibil inclus (300 km/zi)</li>
+          <li>Asigurare CASCO premium</li>
+          <li>Echipament complet</li>
+          <li>Asistență rutieră 24/7</li>
+          <li>Curățenie finală</li>
+          <li>GPS cu hărți offline</li>
+          <li>Kit de întreținere inclus</li>
+          <li>Biciclete pliabile (2 buc)</li>
+          <li>Reducere pentru rezervări lungi</li>
+        </ul>
+        <button class="btn-pkg btn-dark" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Vacanța Lungă</button>
+        <div class="pinstant">🕐 Rezervare instantanee</div>
+      </div>
+    </div>
+    <div class="incl-box">
+      <div class="incl-title">Ce este inclus în toate pachetele?</div>
+      <div class="incl-grid">
+        <div class="incl-item"><div class="incl-icon">🛡️</div><div class="incl-name">Asigurare Completă</div><div class="incl-sub">CASCO și asistență rutieră</div></div>
+        <div class="incl-item"><div class="incl-icon">🧹</div><div class="incl-name">Curățenie Inclusă</div><div class="incl-sub">Preluare și predare curată</div></div>
+        <div class="incl-item"><div class="incl-icon">🔧</div><div class="incl-name">Suport Tehnic</div><div class="incl-sub">Asistență 24/7</div></div>
+        <div class="incl-item"><div class="incl-icon">🗺️</div><div class="incl-name">GPS și Hărți</div><div class="incl-sub">Navigație offline inclusă</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog" class="sec" style="background:var(--bg)">
+  <div class="sec-w">
+    <div class="sec-center">
+      <h2 class="sec-title">Blog - Ghiduri și Inspirație pentru Călătorii</h2>
+      <p class="sec-desc">Descoperă cele mai frumoase destinații, sfaturi utile și povești inspiraționale pentru următoarea ta aventură.</p>
+    </div>
+    <div class="blog-grid">
+      <a class="bcard" href="https://haicuautorulota.ro/inchiriere-autorulote-bucuresti/" style="text-decoration:none;color:inherit;display:block">
+        <div class="bcard-img"><img src="https://haicuautorulota.ro/wp-content/uploads/2026/06/inchiriere-autorulote-bucuresti-2.jpg" alt="Ghid Complet Închiriere Autorulote în București 2025"></div>
+        <div class="bcard-body">
+          <div class="bmeta">📅 2025 &nbsp; 👤 Echipa haicuautorulota.ro</div>
+          <div class="btitle">Ghid Complet: Închiriere Autorulote în București – Tot Ce Trebuie să Știi în 2025</div>
+          <div class="bexcerpt">Tot ce trebuie să știi despre închirierea unei autorulote în București: prețuri, documente necesare, sfaturi practice și recomandări pentru o experiență fără griji.</div>
+          <div class="bread">Citește mai mult →</div>
+        </div>
+      </a>
+      <a class="bcard" href="https://haicuautorulota.ro/destinatii-autorulota-romania/" style="text-decoration:none;color:inherit;display:block">
+        <div class="bcard-img"><img src="https://haicuautorulota.ro/wp-content/uploads/2026/03/Destinatii-Romania-scaled.jpg" alt="Top 10 Destinații cu Autorulota în România"></div>
+        <div class="bcard-body">
+          <div class="bmeta">📅 2025 &nbsp; 👤 Echipa haicuautorulota.ro</div>
+          <div class="btitle">Top 10 Destinații cu Autorulota în România – Aventuri Neașteptate pe Patru Roți</div>
+          <div class="bexcerpt">Descoperă cele mai frumoase destinații din România perfecte pentru o aventură cu autorulota: peisaje spectaculoase și locuri de neuitat pe patru roți.</div>
+          <div class="bread">Citește mai mult →</div>
+        </div>
+      </a>
+    </div>
+    <div class="blog-btn">
+      <a href="https://haicuautorulota.ro/blog" class="btnp" style="padding:13px 28px;font-size:15px;text-decoration:none">📋 Vezi Toate Articolele</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="sec" style="background:var(--white)">
+  <div class="sec-w">
+    <div class="sec-center">
+      <h2 class="sec-title">Contactează-ne pentru rezervare</h2>
+      <p class="sec-desc">Suntem aici să-ți planificăm aventura perfectă. Contactează-ne pentru informații suplimentare sau pentru a face o rezervare.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="form-card">
+        <div class="form-title">✈️ Solicită o Rezervare</div>
+        <div class="camper-banner">
+          <span class="camper-banner-icon">⚙️</span>
+          <div>
+            <div class="cb-name" id="formCamperName">Benimar S344 Up Manual</div>
+            <div class="cb-trans" id="formCamperTrans">Cutie de viteze manuală</div>
+          </div>
+        </div>
+        <div id="formContent">
+          <div class="frow">
+            <div class="fg"><label>Nume complet *</label><input type="text" id="fname" placeholder="Numele tău complet"></div>
+            <div class="fg"><label>Telefon *</label><input type="tel" id="fphone" placeholder="+4 07xx.xxx.xxx"></div>
+          </div>
+          <div class="fg"><label>Email *</label><input type="email" id="femail" placeholder="email@example.com"></div>
+          <div class="frow">
+            <div class="fg"><label>Data plecare *</label><input type="date" id="fstart"></div>
+            <div class="fg"><label>Data întoarcere *</label><input type="date" id="fend"></div>
+          </div>
+          <div class="fg"><label>Mesaj (opțional)</label><textarea id="fmsg" placeholder="Spune-ne mai multe despre planurile tale de călătorie..."></textarea></div>
+          <button class="btn-send" onclick="submitForm()">✈️ <span id="submitTxt">Trimite Solicitarea - Săptămâna Aventurii - Manual</span></button>
+        </div>
+        <div class="success-box" id="successBox">
+          <h3>✅ Solicitare trimisă cu succes!</h3>
+          <p>Îți vom răspunde în maxim 2 ore. Verifică și inbox-ul de email.</p>
+        </div>
+      </div>
+      <div class="con-side">
+        <div class="cinfo">
+          <div class="cinfo-title">Informații de Contact</div>
+          <div class="cinfo-row"><span class="cinfo-icon">📞</span><div><div class="cinfo-lbl">Telefon</div><div class="cinfo-val">+40 766 199 007</div><div class="cinfo-val">Disponibil 24/7 pentru urgențe</div></div></div>
+          <div class="cinfo-row"><span class="cinfo-icon">✉️</span><div><div class="cinfo-lbl">Email</div><div class="cinfo-val">contact@haicuautorulota.ro</div><div class="cinfo-val">Răspundem în maxim 2 ore</div></div></div>
+          <div class="cinfo-row"><span class="cinfo-icon">📍</span><div><div class="cinfo-lbl">Locația</div><div class="cinfo-val">București, România</div><div class="cinfo-val">Preluare din centrul orașului</div></div></div>
+          <div class="cinfo-row"><span class="cinfo-icon">🕐</span><div><div class="cinfo-lbl">Program</div><div class="cinfo-val">Luni - Duminică: 8:00 - 20:00</div><div class="cinfo-val">Preluări flexibile pe weekenduri</div></div></div>
+        </div>
+        <div class="rapid-card">
+          <div class="rapid-title">💬 Răspuns Rapid</div>
+          <div class="rapid-desc">Pentru o rezervare rapidă, sună-ne direct. Echipa noastră este pregătită să-ți răspundă la toate întrebările și să-ți confirme disponibilitatea în timp real.</div>
+          <button class="btn-call" onclick="window.location.href='tel:+40766199007'">📞 Sună Acum: +40 766 199 007</button>
+        </div>
+        <div class="why-card">
+          <div class="why-title">De ce să ne alegi?</div>
+          <ul class="why-list">
+            <li>2 autorulote disponibile (Manual și Automat)</li>
+            <li>Autorulote noi și complet echipate</li>
+            <li>Asigurare CASCO inclusă</li>
+            <li>Suport 24/7 pe toată durata închirierii</li>
+            <li>Prețuri competitive, fără costuri ascunse</li>
+            <li>Confirmare instantanee</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ftr">
+    <div class="ftr-grid">
+      <div>
+        <div class="ftr-logo"><img id="footerLogo" src="" alt="Logo"></div>
+        <div class="ftr-desc">Explorează România cu autorulota noastră modernă și complet echipată. Aventura ta începe aici!</div>
+        <div class="ftr-socials">
+          <a href="#" class="fsoc">f</a>
+          <a href="#" class="fsoc">📷</a>
+          <a href="#" class="fsoc">▶</a>
+        </div>
+      </div>
+      <div>
+        <div class="ftr-col-title">Navigație</div>
+        <ul class="ftr-links">
+          <li><a href="#acasa">Acasă</a></li>
+          <li><a href="#galerie">Galerie</a></li>
+          <li><a href="#preturi">Prețuri</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ftr-col-title">Informații</div>
+        <ul class="ftr-links">
+          <li><a href="#">Termeni și Condiții</a></li>
+          <li><a href="#">Politica de Confidențialitate</a></li>
+          <li><a href="#">Întrebări Frecvente</a></li>
+          <li><a href="#">Ghid de Călătorie</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ftr-col-title">Contact</div>
+        <div class="ftr-contact">
+          <div class="ftr-ci"><span class="ftr-ci-icon">📞</span> +40 766 199 007</div>
+          <div class="ftr-ci"><span class="ftr-ci-icon">✉️</span> contact@haicuautorulota.ro</div>
+          <div class="ftr-ci"><span class="ftr-ci-icon">📍</span> București, România</div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr-bottom">© 2026 haicuautorulota.ro · Toate drepturile rezervate</div>
+  </div>
+</footer>
+
+<div class="lb" id="lb">
+  <button class="lb-close" onclick="lbClose()">✕</button>
+  <button class="lb-prev" onclick="lbNav(-1)">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-next" onclick="lbNav(1)">›</button>
+</div>
+
+<script>
+var B = 'https://content-studio.biela.dev/content-studio/686576c78a1c7045064ae625/1751480005275-686576c78a1c7045064ae625/';
+var LOGO = 'https://haicuautorulota.ro/wp-content/uploads/2026/06/Logo-HaiCuAUtorulota-alb.svg';
+
+var EXT = [
+  B + '1766136770170.jpeg',
+  B + '1766136769606.jpeg',
+  B + '1766136793083.jpeg',
+  B + '1766136794241.jpeg',
+  B + '1766136795577.jpeg',
+  B + '1766136795818.jpeg'
+];
+var EXT_CAPS = ['Vedere Frontală - Design Modern','Vedere Laterală','Exterior față','Exterior spate','Design modern','Vedere completă'];
+
+var INT = [
+  B + '1766136770956.jpeg',
+  B + '1766136770541.jpeg',
+  B + '1766136768891.jpeg',
+  B + '1766136793522.jpeg',
+  B + '1766136793933.jpeg'
+];
+var INT_CAPS = ['Bucătărie Complet Echipată','Zonă de Relaxare','Dormitor Confortabil','Baie Privată','Spațiu Interior'];
+
+var HERO = [
+  B + '1766136770956.jpeg',
+  B + '1766136770170.jpeg',
+  B + '1766136770541.jpeg',
+  B + '1766136769606.jpeg',
+  B + '1766136768891.jpeg',
+  B + '1766136793522.jpeg'
+];
+
+var MANUAL_IMG = EXT[0];
+var AUTOMAT_IMG = EXT[1];
+
+document.getElementById('logoImg').src = LOGO;
+document.getElementById('footerLogo').src = LOGO;
+document.getElementById('imgManual').src = MANUAL_IMG;
+document.getElementById('imgAutomat').src = AUTOMAT_IMG;
+
+var heroIdx = 0;
+var heroWrap = document.getElementById('heroWrap');
+
+HERO.forEach(function(src, i) {
+  var img = document.createElement('img');
+  img.src = src;
+  img.alt = 'Autorulota ' + (i + 1);
+  if (i === 0) img.className = 'active';
+  heroWrap.insertBefore(img, heroWrap.firstChild);
+});
+
+var heroDots = document.getElementById('heroDots');
+HERO.forEach(function(_, i) {
+  var d = document.createElement('button');
+  d.className = 'sdot' + (i === 0 ? ' active' : '');
+  d.onclick = function() { setHero(i); };
+  heroDots.appendChild(d);
+});
+
+function setHero(idx) {
+  heroIdx = idx;
+  var imgs = heroWrap.querySelectorAll('img');
+  imgs.forEach(function(img, i) {
+    img.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.sdot').forEach(function(d, i) {
+    d.classList.toggle('active', i === idx);
+  });
+}
+
+function heroNav(dir) {
+  setHero((heroIdx + dir + HERO.length) % HERO.length);
+}
+
+setInterval(function() {
+  heroNav(1);
+}, 4000);
+
+var extIdx = 0, intIdx = 0;
+var lbImages = [], lbIdx = 0;
+
+function buildGallery(id, images, caps) {
+  var slider = document.getElementById(id + 'Slider');
+
+  images.forEach(function(src, i) {
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = caps[i];
+    if (i === 0) img.className = 'active';
+    img.onclick = (function(idx) {
+      return function() { lbOpen(images, idx); };
+    })(i);
+    slider.insertBefore(img, slider.firstChild);
+  });
+
+  var dotsEl = document.getElementById(id + 'Dots');
+  images.forEach(function(_, i) {
+    var d = document.createElement('button');
+    d.className = 'gdot' + (i === 0 ? ' active' : '');
+    d.onclick = (function(idx) {
+      return function() { setGal(id, images, caps, idx); };
+    })(i);
+    dotsEl.appendChild(d);
+  });
+
+  document.getElementById(id + 'Cnt').textContent = '1 din ' + images.length + ' imagini';
+}
+
+function setGal(id, images, caps, idx) {
+  if (id === 'ext') extIdx = idx;
+  else intIdx = idx;
+
+  var slider = document.getElementById(id + 'Slider');
+  slider.querySelectorAll('img').forEach(function(img, i) {
+    img.classList.toggle('active', i === idx);
+  });
+
+  document.getElementById(id + 'Cap').textContent = caps[idx];
+  document.getElementById(id + 'Cnt').textContent = (idx + 1) + ' din ' + images.length + ' imagini';
+
+  document.querySelectorAll('#' + id + 'Dots .gdot').forEach(function(d, i) {
+    d.classList.toggle('active', i === idx);
+  });
+}
+
+function galNav(id, dir) {
+  if (id === 'ext') {
+    extIdx = (extIdx + dir + EXT.length) % EXT.length;
+    setGal('ext', EXT, EXT_CAPS, extIdx);
+  } else {
+    intIdx = (intIdx + dir + INT.length) % INT.length;
+    setGal('int', INT, INT_CAPS, intIdx);
+  }
+}
+
+buildGallery('ext', EXT, EXT_CAPS);
+buildGallery('int', INT, INT_CAPS);
+
+function lbOpen(images, idx) {
+  lbImages = images;
+  lbIdx = idx;
+  document.getElementById('lbImg').src = lbImages[lbIdx];
+  document.getElementById('lb').classList.add('open');
+}
+
+function lbClose() {
+  document.getElementById('lb').classList.remove('open');
+}
+
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + lbImages.length) % lbImages.length;
+  document.getElementById('lbImg').src = lbImages[lbIdx];
+}
+
+document.getElementById('lb').addEventListener('click', function(e) {
+  if (e.target === this) lbClose();
+});
+
+var selectedCamper = 'manual';
+var selectedPkg = 2;
+
+function getPkgLabel(n) {
+  var labels = {
+    1: 'Weekend Scurt',
+    2: 'Săptămâna Aventurii',
+    3: 'Vacanța Lungă'
+  };
+  return labels[n] || 'Rezervare';
+}
+
+function refreshSubmitButton() {
+  var txt = document.getElementById('submitTxt');
+  if (!txt) return;
+  var camperLabel = selectedCamper === 'manual' ? 'Manual' : 'Automat';
+  txt.textContent = 'Trimite Solicitarea - ' + getPkgLabel(selectedPkg) + ' - ' + camperLabel;
+}
+
+function selectCamper(type) {
+  selectedCamper = type;
+  var isManual = type === 'manual';
+  var mod = isManual ? 0 : 20;
+  var name = isManual ? 'Benimar S344 Up Manual' : 'Benimar S344 Up Automat';
+  var trans = isManual ? 'Cutie de viteze manuală' : 'Cutie de viteze automată';
+  var transShort = isManual ? 'Cutie manuală' : 'Cutie automată';
+
+  document.getElementById('cardManual').classList.toggle('sel', isManual);
+  document.getElementById('cardAutomat').classList.toggle('sel', !isManual);
+
+  document.getElementById('btnManual').textContent = isManual ? 'Selectat' : 'Selectează';
+  document.getElementById('btnAutomat').textContent = !isManual ? 'Selectat' : 'Selectează';
+  document.getElementById('btnManual').classList.toggle('sel', isManual);
+  document.getElementById('btnAutomat').classList.toggle('sel', !isManual);
+
+  document.getElementById('badgeSelManual').style.display = isManual ? 'flex' : 'none';
+  document.getElementById('badgePlusAutomat').style.display = !isManual ? 'block' : 'none';
+
+  document.getElementById('selLabel').textContent = name;
+  document.getElementById('calBadge').textContent = (isManual ? '⚙️ ' : '🚗 ') + 'Este selectat: ' + name;
+  document.getElementById('priceBadge').textContent = '⚙️ ' + name;
+  document.getElementById('sCamper').textContent = isManual ? 'Manual' : 'Automat';
+
+  document.getElementById('formCamperName').textContent = name;
+  document.getElementById('formCamperTrans').textContent = trans;
+
+  document.getElementById('p1').textContent = 150 + mod;
+  document.getElementById('p2').textContent = 120 + mod;
+  document.getElementById('p3').textContent = 100 + mod;
+  document.getElementById('pt1').textContent = transShort;
+  document.getElementById('pt2').textContent = transShort;
+  document.getElementById('pt3').textContent = transShort;
+
+  refreshSubmitButton();
+  updateCalPrice();
+  calStart = null;
+  calEnd = null;
+  loadBlocked();
+}
+
+var FB_URLS = {
+  manual:  'https://calendarhaicuautorulota-default-rtdb.europe-west1.firebasedatabase.app/blocked.json',
+  automat: 'https://databasehaicuautorulotaautomat-default-rtdb.europe-west1.firebasedatabase.app/blocked.json'
+};
+var BLOCKED = new Set();
+
+function loadBlocked() {
+  fetch(FB_URLS[selectedCamper] + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var arr = [];
+      if (Array.isArray(data)) {
+        arr = data.filter(function(x) { return x; });
+      } else if (data && typeof data === 'object') {
+        arr = Object.values(data).filter(function(x) { return x; });
+      }
+      BLOCKED = new Set(arr);
+      if (calStart && calEnd && rangeHasBlocked(calStart, calEnd)) {
+        calStart = null;
+        calEnd = null;
+      }
+      renderCal();
+      updateCalPrice();
+    })
+    .catch(function() {
+      renderCal();
+      updateCalPrice();
+    });
+}
+
+var MONTHS = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+var DAYS = ['Lun','Mar','Mie','Joi','Vin','Săm','Dum'];
+
+var today = new Date();
+today.setHours(0, 0, 0, 0);
+
+var calY = today.getFullYear();
+var calM = today.getMonth();
+var calStart = null;
+var calEnd = null;
+
+function calNavMonth(dir) {
+  calM += dir;
+  if (calM > 11) { calM = 0; calY++; }
+  if (calM < 0) { calM = 11; calY--; }
+  renderCal();
+}
+
+function calNavYear(dir) {
+  calY += dir;
+  renderCal();
+}
+
+function eachDateBetween(start, end, cb) {
+  var cur = new Date(start);
+  var limit = new Date(end);
+  while (cur < limit) {
+    cb(new Date(cur));
+    cur.setDate(cur.getDate() + 1);
+  }
+}
+
+function dateToIso(dateObj) {
+  return dateObj.getFullYear() + '-' +
+    String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+    String(dateObj.getDate()).padStart(2, '0');
+}
+
+function rangeHasBlocked(start, end) {
+  var blocked = false;
+  eachDateBetween(start, end, function(dateObj) {
+    var ds = dateToIso(dateObj);
+    if (BLOCKED.has(ds)) blocked = true;
+  });
+  return blocked;
+}
+
+function renderCal() {
+  document.getElementById('calTitle').textContent = MONTHS[calM] + ' ' + calY;
+  var grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  DAYS.forEach(function(d) {
+    var h = document.createElement('div');
+    h.className = 'cday-hdr';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  var first = new Date(calY, calM, 1);
+  var startDow = (first.getDay() + 6) % 7;
+
+  for (var i = 0; i < startDow; i++) {
+    var e = document.createElement('button');
+    e.className = 'cday empty';
+    e.disabled = true;
+    grid.appendChild(e);
+  }
+
+  var dim = new Date(calY, calM + 1, 0).getDate();
+
+  for (var d = 1; d <= dim; d++) {
+    var btn = document.createElement('button');
+    var ds = calY + '-' + String(calM + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    var dateObj = new Date(calY, calM, d);
+
+    btn.textContent = d;
+    var cls = 'cday';
+
+    if (dateObj < today) {
+      cls += ' past';
+      btn.disabled = true;
+    } else if (BLOCKED.has(ds)) {
+      cls += ' blocked';
+      btn.disabled = true;
+    } else {
+      if (ds === calStart || ds === calEnd) cls += ' sel';
+      else if (calStart && calEnd && ds > calStart && ds < calEnd) cls += ' inrange';
+      else if (dateObj.getTime() === today.getTime()) cls += ' today';
+
+      btn.onclick = (function(s) {
+        return function() { calClick(s); };
+      })(ds);
+    }
+
+    btn.className = cls;
+    grid.appendChild(btn);
+  }
+}
+
+function calClick(ds) {
+  if (!calStart || calEnd) {
+    calStart = ds;
+    calEnd = null;
+    renderCal();
+    updateCalPrice();
+    return;
+  }
+
+  if (ds === calStart) {
+    calStart = null;
+    calEnd = null;
+    renderCal();
+    updateCalPrice();
+    return;
+  }
+
+  var start = ds < calStart ? ds : calStart;
+  var end = ds < calStart ? calStart : ds;
+
+  if (rangeHasBlocked(start, end)) {
+    alert('Perioada selectată conține zile deja blocate. Te rugăm să alegi un interval continuu disponibil.');
+    return;
+  }
+
+  calStart = start;
+  calEnd = end;
+
+  renderCal();
+  updateCalPrice();
+}
+
+function updateCalPrice() {
+  if (!calStart || !calEnd) {
+    document.getElementById('sideEmpty').style.display = '';
+    document.getElementById('sideInfo').style.display = 'none';
+    return;
+  }
+
+  if (rangeHasBlocked(calStart, calEnd)) {
+    document.getElementById('sideEmpty').style.display = '';
+    document.getElementById('sideInfo').style.display = 'none';
+    return;
+  }
+
+  var s = new Date(calStart);
+  var e = new Date(calEnd);
+  var days = Math.round((e - s) / 86400000);
+
+  if (days < 2) {
+    document.getElementById('sideEmpty').style.display = '';
+    document.getElementById('sideInfo').style.display = 'none';
+    return;
+  }
+
+  var mod = selectedCamper === 'automat' ? 20 : 0;
+  var rate = days >= 14 ? 100 + mod : days >= 7 ? 120 + mod : 150 + mod;
+
+  document.getElementById('sideEmpty').style.display = 'none';
+  document.getElementById('sideInfo').style.display = '';
+  document.getElementById('sCheckin').textContent = fmtDate(calStart);
+  document.getElementById('sCheckout').textContent = fmtDate(calEnd);
+  document.getElementById('sDuration').textContent = days + ' zile';
+  document.getElementById('sTotal').textContent = days * rate;
+
+  document.getElementById('fstart').value = calStart;
+  document.getElementById('fend').value = calEnd;
+}
+
+function fmtDate(s) {
+  var p = s.split('-');
+  return p[2] + '.' + p[1] + '.' + p[0];
+}
+
+loadBlocked();
+setInterval(loadBlocked, 30000);
+
+function submitForm() {
+  var n = document.getElementById('fname').value.trim();
+  var e = document.getElementById('femail').value.trim();
+  var p = document.getElementById('fphone').value.trim();
+  var s = document.getElementById('fstart').value;
+  var en = document.getElementById('fend').value;
+  var m = document.getElementById('fmsg').value.trim();
+
+  if (!n || !e || !p || !s || !en) {
+    alert('Te rugăm să completezi toate câmpurile obligatorii (*)');
+    return;
+  }
+
+  var startDate = new Date(s);
+  var endDate = new Date(en);
+  var days = Math.round((endDate - startDate) / 86400000);
+
+  if (days < 2) {
+    alert('Rezervarea minimă este de 2 zile.');
+    return;
+  }
+
+  if (rangeHasBlocked(s, en)) {
+    alert('Perioada selectată conține zile blocate. Te rugăm să alegi alte date.');
+    return;
+  }
+
+  var btn = document.querySelector('#formContent .btn-send');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Se trimite...';
+
+  var data = new FormData();
+  data.append('name', n);
+  data.append('email', e);
+  data.append('phone', p);
+  data.append('start', s);
+  data.append('end', en);
+  data.append('camper', selectedCamper === 'automat' ? 'Benimar S344 UP Automat' : 'Benimar S344 UP Manual');
+  data.append('package', getPkgLabel(selectedPkg));
+  data.append('message', m);
+
+  fetch('/send-mail.php', {
+    method: 'POST',
+    body: data
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.ok) {
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('successBox').classList.add('show');
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '✈️ <span id="submitTxt"></span>';
+      refreshSubmitButton();
+      alert('Eroare la trimitere. Sună la +40 766 199 007 sau încearcă din nou.');
+    }
+  })
+  .catch(function() {
+    btn.disabled = false;
+    btn.innerHTML = '✈️ <span id="submitTxt"></span>';
+    refreshSubmitButton();
+    alert('Eroare la trimitere. Sună la +40 766 199 007 sau încearcă din nou.');
+  });
+}
+
+function selectPkg(n) {
+  selectedPkg = n;
+  [1,2,3].forEach(function(i) {
+    var el = document.getElementById('pkg' + i);
+    if (el) el.classList.toggle('selected', i === n);
+  });
+  refreshSubmitButton();
+  document.getElementById('contact').scrollIntoView({ behavior:'smooth' });
+}
+
+function toggleMenu() {
+  document.getElementById('mobMenu').classList.toggle('open');
+}
+
+window.syncSpacer = function() {
+  var topbar = document.querySelector('.topbar');
+  var spacer = document.querySelector('.topbar-spacer');
+  if (topbar && spacer) {
+    spacer.style.height = topbar.offsetHeight + 'px';
+  }
+};
+
+window.addEventListener('scroll', function() {
+  var hdr = document.querySelector('header');
+  if (window.scrollY > 60) {
+    hdr.classList.add('scrolled');
+  } else {
+    hdr.classList.remove('scrolled');
+  }
+  syncSpacer();
+});
+
+window.addEventListener('load', syncSpacer);
+window.addEventListener('resize', syncSpacer);
+syncSpacer();
+
+refreshSubmitButton();
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.addEventListener('load', function() {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+});
+</script>
+
+<a href="https://wa.me/40766199007?text=Buna%20ziua%2C%20as%20dori%20informatii%20despre%20inchirierea%20autorulotei"
+   target="_blank"
+   id="whatsapp-btn"
+   title="Contactează-ne pe WhatsApp"
+   style="
+     position:fixed;
+     bottom:24px;
+     right:24px;
+     width:60px;
+     height:60px;
+     background:#25D366;
+     border-radius:50%;
+     display:flex;
+     align-items:center;
+     justify-content:center;
+     box-shadow:0 4px 20px rgba(37,211,102,.5);
+     z-index:9999;
+     transition:all .3s;
+     text-decoration:none;
+   "
+   onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 8px 30px rgba(37,211,102,.7)'"
+   onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,.5)'">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<div id="wa-tooltip" style="
+  position:fixed;
+  bottom:32px;
+  right:94px;
+  background:var(--text);
+  color:#fff;
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+  z-index:9998;
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+  font-family:'Manrope',sans-serif;
+">💬 Scrie-ne pe WhatsApp!</div>
+
+<script>
+setTimeout(function(){
+  var t = document.getElementById('wa-tooltip');
+  t.style.opacity = '1';
+  setTimeout(function(){ t.style.opacity = '0'; }, 4000);
+}, 3000);
+</script>
+
+</body>
+</html>
