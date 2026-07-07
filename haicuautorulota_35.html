@@ -749,7 +749,8 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
               <div class="side-row"><span class="side-lbl" data-i18n="side-checkout">Check-out</span><span class="side-val" id="sCheckout">-</span></div>
               <div class="side-row"><span class="side-lbl" data-i18n="side-duration">Durata</span><span class="side-val" id="sDuration">-</span></div>
               <div class="side-row"><span class="side-lbl" data-i18n="side-camper">Autorulotă</span><span class="side-val" id="sCamper">Manual</span></div>
-              <div class="side-row"><span class="side-lbl" data-i18n="side-sezon">Sezon</span><span class="side-val" id="sSezonType">-</span></div>
+              <div class="side-row"><span class="side-lbl" data-i18n="side-sezon">Perioadă</span><span class="side-val" id="sSezonType">-</span></div>
+              <div class="side-row"><span class="side-lbl" data-i18n="side-pricepzi">Preț/zi</span><span class="side-val" id="sPricePerDay">-</span></div>
             </div>
             <div class="price-box">
               <div class="price-lbl" data-i18n="total-lbl">Total estimat</div>
@@ -1027,7 +1028,7 @@ var TRANS = {
     'side-checkin':'Check-in','side-checkout':'Check-out','side-duration':'Durata','side-camper':'Autorulotă',
     'total-lbl':'Total estimat','btn-book-now2':'Rezervă Acum →',
     'info-title':'Informații Importante','info-1':'Check-in: 14:00 - 18:00','info-2':'Check-out: 08:00 - 11:00','info-3':'Rezervare minimă: 5 zile','info-4':'Confirmare instantanee',
-    'side-sezon':'Sezon','lbl-sezon':'Sezon (15 iun – 15 sep)','lbl-extrasezon':'Extrasezon','lbl-mixt':'Sezon + Extrasezon',
+    'side-sezon':'Perioadă','side-pricepzi':'Preț/zi','lbl-sezon':'Sezon','lbl-extrasezon':'Extrasezon','lbl-mixt':'Sezon + Extrasezon',
     'alert-min':'Perioada minimă de închiriere este de 5 zile.',
     'prices-title':'Prețuri transparente, fără costuri ascunse','prices-desc':'Alege pachetul care se potrivește perfect cu planurile tale de vacanță. Toate prețurile includ asigurarea și echipamentul complet.',
     'pop-badge':'Cel mai popular',
@@ -1124,7 +1125,7 @@ var TRANS = {
     'is-selected':'Selected:','you-selected':'You selected:','submit-prefix':'Send Request - ',
     'days-unit':'days','img-of':'of','img-unit':'images','send-loading':'⏳ Sending...',
     'alert-fields':'Please fill in all required fields (*)','alert-min':'Minimum rental period is 5 days.','alert-blocked':'The selected period contains already blocked days. Please choose a continuous available interval.','alert-blocked2':'The selected period contains blocked days. Please choose different dates.','alert-error':'Sending error. Call +40 766 199 007 or try again.',
-    'side-sezon':'Season','lbl-sezon':'Season (15 Jun – 15 Sep)','lbl-extrasezon':'Off-season','lbl-mixt':'Season + Off-season',
+    'side-sezon':'Period','side-pricepzi':'Price/day','lbl-sezon':'Season','lbl-extrasezon':'Off-season','lbl-mixt':'Season + Off-season',
     'ext-caps':['Front View - Modern Design','Side View','Front Exterior','Rear Exterior','Modern Design','Full View'],
     'int-caps':['Relaxation Area','Comfortable Bedroom','Private Bathroom','Interior Space'],
     'months':['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -1589,10 +1590,19 @@ function updateCalPrice() {
     cur.setDate(cur.getDate() + 1);
   }
 
-  var sezonLabel;
-  if (sezonDays === 0) sezonLabel = t('lbl-extrasezon');
-  else if (sezonDays === days) sezonLabel = t('lbl-sezon');
-  else sezonLabel = t('lbl-mixt');
+  var sezonLabel, pricePerDay;
+  var rateSezon = selectedCamper === 'automat' ? 170 : 160;
+  var rateExtra = selectedCamper === 'automat' ? 140 : 130;
+  if (sezonDays === 0) {
+    sezonLabel = t('lbl-extrasezon');
+    pricePerDay = rateExtra + '€';
+  } else if (sezonDays === days) {
+    sezonLabel = t('lbl-sezon');
+    pricePerDay = rateSezon + '€';
+  } else {
+    sezonLabel = t('lbl-mixt');
+    pricePerDay = rateExtra + '€ – ' + rateSezon + '€';
+  }
 
   document.getElementById('sideEmpty').style.display = 'none';
   document.getElementById('sideInfo').style.display = '';
@@ -1600,6 +1610,7 @@ function updateCalPrice() {
   document.getElementById('sCheckout').textContent = fmtDate(calEnd);
   document.getElementById('sDuration').textContent = days + ' ' + t('days-unit');
   document.getElementById('sSezonType').textContent = sezonLabel;
+  document.getElementById('sPricePerDay').textContent = pricePerDay;
   document.getElementById('sTotal').textContent = total;
 
   document.getElementById('fstart').value = calStart;
