@@ -1173,7 +1173,7 @@ var EXT = [
   B + '1766136795577.jpeg',
   B + '1766136795818.jpeg'
 ];
-// EXT_CAPS initialized from TRANS above
+var EXT_CAPS = TRANS[currentLang]['ext-caps'];
 
 var INT = [
   B + '1766136770541.jpeg',
@@ -1181,7 +1181,7 @@ var INT = [
   B + '1766136793522.jpeg',
   B + '1766136793933.jpeg'
 ];
-// INT_CAPS initialized from TRANS above
+var INT_CAPS = TRANS[currentLang]['int-caps'];
 
 var HERO = [
   B + '1766136770956.jpeg',
@@ -1408,8 +1408,6 @@ function loadBlocked() {
 
 var MONTHS = TRANS[currentLang].months;
 var DAYS = TRANS[currentLang]['days-hdr'];
-var EXT_CAPS = TRANS[currentLang]['ext-caps'];
-var INT_CAPS = TRANS[currentLang]['int-caps'];
 
 var today = new Date();
 today.setHours(0, 0, 0, 0);
