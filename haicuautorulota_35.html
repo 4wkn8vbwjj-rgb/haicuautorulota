@@ -119,7 +119,7 @@
         {
           "@type": "Offer",
           "name": "Weekend Scurt (2-3 zile)",
-          "description": "Rezervare minimă 2 zile. Combustibil inclus 200 km/zi, CASCO, echipament complet.",
+          "description": "Rezervare minimă 5 zile. Combustibil inclus 200 km/zi, CASCO, echipament complet.",
           "price": "150",
           "priceCurrency": "EUR",
           "unitCode": "DAY",
@@ -618,7 +618,7 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
             <li data-i18n="manual-f3">Motor 2.2L diesel 140CP</li>
           </ul>
           <div class="ccard-foot">
-            <div class="cprice"><span data-i18n="price-from">Preț de la</span><strong>100€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
+            <div class="cprice"><span data-i18n="price-from">Preț de la</span><strong>130€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
             <button class="btn-sel sel" id="btnManual" onclick="selectCamper('manual');event.stopPropagation()" data-i18n="btn-selected">Selectat</button>
           </div>
         </div>
@@ -641,7 +641,7 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
             <li data-i18n="automat-f3">Motor 2.2L diesel 140CP</li>
           </ul>
           <div class="ccard-foot">
-            <div class="cprice"><span data-i18n="price-from">Preț de la</span><strong>120€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
+            <div class="cprice"><span data-i18n="price-from">Preț de la</span><strong>140€ <small style="font-size:14px;font-weight:400;color:var(--muted)">/zi</small></strong></div>
             <button class="btn-sel" id="btnAutomat" onclick="selectCamper('automat');event.stopPropagation()" data-i18n="btn-select">Selectează</button>
           </div>
         </div>
@@ -742,12 +742,14 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
         <div class="side-card">
           <div class="side-title" data-i18n="side-period">Perioada Selectată</div>
           <div id="sideEmpty" class="side-empty"><div style="font-size:32px;color:var(--border);margin-bottom:8px">📅</div><span data-i18n="side-empty-msg">Selectează data de început pentru a vedea disponibilitatea</span></div>
+          <div id="sideMinWarn" style="display:none;text-align:center;padding:14px 8px;color:#EF4444;font-size:13px;font-weight:600">⚠️ <span data-i18n="alert-min">Perioada minimă de închiriere este de 5 zile.</span></div>
           <div id="sideInfo" style="display:none">
             <div class="side-rows">
               <div class="side-row"><span class="side-lbl" data-i18n="side-checkin">Check-in</span><span class="side-val" id="sCheckin">-</span></div>
               <div class="side-row"><span class="side-lbl" data-i18n="side-checkout">Check-out</span><span class="side-val" id="sCheckout">-</span></div>
               <div class="side-row"><span class="side-lbl" data-i18n="side-duration">Durata</span><span class="side-val" id="sDuration">-</span></div>
               <div class="side-row"><span class="side-lbl" data-i18n="side-camper">Autorulotă</span><span class="side-val" id="sCamper">Manual</span></div>
+              <div class="side-row"><span class="side-lbl" data-i18n="side-sezon">Sezon</span><span class="side-val" id="sSezonType">-</span></div>
             </div>
             <div class="price-box">
               <div class="price-lbl" data-i18n="total-lbl">Total estimat</div>
@@ -761,7 +763,7 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
           <ul class="info-list">
             <li data-i18n="info-1">Check-in: 14:00 - 18:00</li>
             <li data-i18n="info-2">Check-out: 08:00 - 11:00</li>
-            <li data-i18n="info-3">Rezervare minimă: 2 zile</li>
+            <li data-i18n="info-3">Rezervare minimă: 5 zile</li>
             <li data-i18n="info-4">Confirmare instantanee</li>
           </ul>
         </div>
@@ -770,7 +772,7 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
   </div>
 </section>
 
-<section id="preturi" class="sec" style="background:var(--white)">
+<section id="preturi" class="sec" style="display:none">
   <div class="sec-w">
     <div class="sec-center">
       <span class="badge" id="priceBadge">⚙️ Benimar S344 Up Manual</span>
@@ -1024,7 +1026,9 @@ var TRANS = {
     'side-period':'Perioada Selectată','side-empty-msg':'Selectează data de început pentru a vedea disponibilitatea',
     'side-checkin':'Check-in','side-checkout':'Check-out','side-duration':'Durata','side-camper':'Autorulotă',
     'total-lbl':'Total estimat','btn-book-now2':'Rezervă Acum →',
-    'info-title':'Informații Importante','info-1':'Check-in: 14:00 - 18:00','info-2':'Check-out: 08:00 - 11:00','info-3':'Rezervare minimă: 2 zile','info-4':'Confirmare instantanee',
+    'info-title':'Informații Importante','info-1':'Check-in: 14:00 - 18:00','info-2':'Check-out: 08:00 - 11:00','info-3':'Rezervare minimă: 5 zile','info-4':'Confirmare instantanee',
+    'side-sezon':'Sezon','lbl-sezon':'Sezon (15 iun – 15 sep)','lbl-extrasezon':'Extrasezon','lbl-mixt':'Sezon + Extrasezon',
+    'alert-min':'Perioada minimă de închiriere este de 5 zile.',
     'prices-title':'Prețuri transparente, fără costuri ascunse','prices-desc':'Alege pachetul care se potrivește perfect cu planurile tale de vacanță. Toate prețurile includ asigurarea și echipamentul complet.',
     'pop-badge':'Cel mai popular',
     'pkg1-dur':'📅 2-3 zile','pkg1-name':'Weekend Scurt','pkg1-desc':'Perfect pentru o escapadă de weekend',
@@ -1054,7 +1058,7 @@ var TRANS = {
     'pkg-labels':{1:'Weekend Scurt',2:'Săptămâna Aventurii',3:'Vacanța Lungă'},
     'is-selected':'Este selectat:','you-selected':'Ai selectat:','submit-prefix':'Trimite Solicitarea - ',
     'days-unit':'zile','img-of':'din','img-unit':'imagini','send-loading':'⏳ Se trimite...',
-    'alert-fields':'Te rugăm să completezi toate câmpurile obligatorii (*)','alert-min':'Rezervarea minimă este de 2 zile.','alert-blocked':'Perioada selectată conține zile deja blocate. Te rugăm să alegi un interval continuu disponibil.','alert-blocked2':'Perioada selectată conține zile blocate. Te rugăm să alegi alte date.','alert-error':'Eroare la trimitere. Sună la +40 766 199 007 sau încearcă din nou.',
+    'alert-fields':'Te rugăm să completezi toate câmpurile obligatorii (*)','alert-blocked':'Perioada selectată conține zile deja blocate. Te rugăm să alegi un interval continuu disponibil.','alert-blocked2':'Perioada selectată conține zile blocate. Te rugăm să alegi alte date.','alert-error':'Eroare la trimitere. Sună la +40 766 199 007 sau încearcă din nou.',
     'ext-caps':['Vedere Frontală - Design Modern','Vedere Laterală','Exterior față','Exterior spate','Design modern','Vedere completă'],
     'int-caps':['Zonă de Relaxare','Dormitor Confortabil','Baie Privată','Spațiu Interior'],
     'months':['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'],
@@ -1119,7 +1123,8 @@ var TRANS = {
     'pkg-labels':{1:'Short Weekend',2:'Adventure Week',3:'Long Vacation'},
     'is-selected':'Selected:','you-selected':'You selected:','submit-prefix':'Send Request - ',
     'days-unit':'days','img-of':'of','img-unit':'images','send-loading':'⏳ Sending...',
-    'alert-fields':'Please fill in all required fields (*)','alert-min':'Minimum rental is 2 days.','alert-blocked':'The selected period contains already blocked days. Please choose a continuous available interval.','alert-blocked2':'The selected period contains blocked days. Please choose different dates.','alert-error':'Sending error. Call +40 766 199 007 or try again.',
+    'alert-fields':'Please fill in all required fields (*)','alert-min':'Minimum rental period is 5 days.','alert-blocked':'The selected period contains already blocked days. Please choose a continuous available interval.','alert-blocked2':'The selected period contains blocked days. Please choose different dates.','alert-error':'Sending error. Call +40 766 199 007 or try again.',
+    'side-sezon':'Season','lbl-sezon':'Season (15 Jun – 15 Sep)','lbl-extrasezon':'Off-season','lbl-mixt':'Season + Off-season',
     'ext-caps':['Front View - Modern Design','Side View','Front Exterior','Rear Exterior','Modern Design','Full View'],
     'int-caps':['Relaxation Area','Comfortable Bedroom','Private Bathroom','Interior Space'],
     'months':['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -1538,6 +1543,18 @@ function calClick(ds) {
   updateCalPrice();
 }
 
+function isSezon(dateObj) {
+  var m = dateObj.getMonth() + 1;
+  var d = dateObj.getDate();
+  return (m === 6 && d >= 15) || m === 7 || m === 8 || (m === 9 && d <= 15);
+}
+
+function getDayRate(dateObj) {
+  return isSezon(dateObj)
+    ? (selectedCamper === 'automat' ? 170 : 160)
+    : (selectedCamper === 'automat' ? 140 : 130);
+}
+
 function updateCalPrice() {
   if (!calStart || !calEnd) {
     document.getElementById('sideEmpty').style.display = '';
@@ -1555,21 +1572,35 @@ function updateCalPrice() {
   var e = new Date(calEnd);
   var days = Math.round((e - s) / 86400000);
 
-  if (days < 2) {
+  if (days < 5) {
     document.getElementById('sideEmpty').style.display = '';
     document.getElementById('sideInfo').style.display = 'none';
+    document.getElementById('sideMinWarn').style.display = '';
     return;
   }
+  document.getElementById('sideMinWarn').style.display = 'none';
 
-  var mod = selectedCamper === 'automat' ? 20 : 0;
-  var rate = days >= 14 ? 100 + mod : days >= 7 ? 120 + mod : 150 + mod;
+  var total = 0;
+  var sezonDays = 0;
+  var cur = new Date(s);
+  while (cur < e) {
+    total += getDayRate(cur);
+    if (isSezon(cur)) sezonDays++;
+    cur.setDate(cur.getDate() + 1);
+  }
+
+  var sezonLabel;
+  if (sezonDays === 0) sezonLabel = t('lbl-extrasezon');
+  else if (sezonDays === days) sezonLabel = t('lbl-sezon');
+  else sezonLabel = t('lbl-mixt');
 
   document.getElementById('sideEmpty').style.display = 'none';
   document.getElementById('sideInfo').style.display = '';
   document.getElementById('sCheckin').textContent = fmtDate(calStart);
   document.getElementById('sCheckout').textContent = fmtDate(calEnd);
   document.getElementById('sDuration').textContent = days + ' ' + t('days-unit');
-  document.getElementById('sTotal').textContent = days * rate;
+  document.getElementById('sSezonType').textContent = sezonLabel;
+  document.getElementById('sTotal').textContent = total;
 
   document.getElementById('fstart').value = calStart;
   document.getElementById('fend').value = calEnd;
@@ -1600,7 +1631,7 @@ function submitForm() {
   var endDate = new Date(en);
   var days = Math.round((endDate - startDate) / 86400000);
 
-  if (days < 2) {
+  if (days < 5) {
     alert(t('alert-min'));
     return;
   }
