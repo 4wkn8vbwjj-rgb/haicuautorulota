@@ -780,60 +780,52 @@ footer{background:#0F172A;color:#94A3B8;padding:52px 24px 20px}
       <h2 class="sec-title" data-i18n="prices-title">Prețuri transparente, fără costuri ascunse</h2>
       <p class="sec-desc" data-i18n="prices-desc">Alege pachetul care se potrivește perfect cu planurile tale de vacanță. Toate prețurile includ asigurarea și echipamentul complet.</p>
     </div>
-    <div class="price-grid">
-      <div class="pcard" id="pkg1" onclick="selectPkg(1)">
-        <div class="pdur" data-i18n="pkg1-dur">📅 2-3 zile</div>
-        <div class="pname" data-i18n="pkg1-name">Weekend Scurt</div>
-        <div class="pdesc" data-i18n="pkg1-desc">Perfect pentru o escapadă de weekend</div>
-        <div class="pprice"><span id="p1">150</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
-        <div class="ptrans">⚙️ <span id="pt1">Cutie manuală</span></div>
+    <div class="price-grid" style="grid-template-columns:repeat(2,1fr);max-width:820px;margin:0 auto">
+      <div class="pcard" style="cursor:default">
+        <div class="pname" data-i18n="card-manual-name">Benimar S344 UP</div>
+        <div class="pdesc" data-i18n="card-manual-sub">Cutie Manuală</div>
+        <div style="margin:22px 0 18px;display:flex;flex-direction:column;gap:10px">
+          <div style="background:var(--primary-light);border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px" data-i18n="lbl-sezon-short">🌞 Sezon (15 iun – 15 sep)</div>
+            <div class="pprice" style="margin:0"><span>160</span><span class="peuro">€</span><span class="punit"> /zi</span></div>
+          </div>
+          <div style="background:var(--bg);border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px" data-i18n="lbl-extra-short">❄️ Extrasezon</div>
+            <div class="pprice" style="margin:0"><span>140</span><span class="peuro">€</span><span class="punit"> /zi</span></div>
+          </div>
+        </div>
         <ul class="pfeats">
-          <li data-i18n="pf-1">Combustibil inclus (200 km/zi)</li>
-          <li data-i18n="pf-casco">Asigurare CASCO</li>
-          <li data-i18n="pf-equip">Echipament complet</li>
-          <li data-i18n="pf-assist">Asistență rutieră 24/7</li>
-          <li data-i18n="pf-clean">Curățenie finală</li>
-        </ul>
-        <button class="btn-pkg btn-dark" data-i18n="btn-pkg1" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Weekend Scurt</button>
-        <div class="pinstant" data-i18n="instant">🕐 Rezervare instantanee</div>
-      </div>
-      <div class="pcard pop selected" id="pkg2" onclick="selectPkg(2)">
-        <div class="pop-badge" data-i18n="pop-badge">Cel mai popular</div>
-        <div class="pdur" data-i18n="pkg2-dur">📅 7 zile</div>
-        <div class="pname" data-i18n="pkg2-name">Săptămâna Aventurii</div>
-        <div class="pdesc" data-i18n="pkg2-desc">Cea mai populară opțiune pentru vacanțe</div>
-        <div class="pprice"><span id="p2">120</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
-        <div class="ptrans">⚙️ <span id="pt2">Cutie manuală</span></div>
-        <ul class="pfeats">
-          <li data-i18n="pf-2f">Combustibil inclus (250 km/zi)</li>
           <li data-i18n="pf-casco">Asigurare CASCO</li>
           <li data-i18n="pf-equip">Echipament complet</li>
           <li data-i18n="pf-assist">Asistență rutieră 24/7</li>
           <li data-i18n="pf-clean">Curățenie finală</li>
           <li data-i18n="pf-gps">GPS cu hărți offline</li>
-          <li data-i18n="pf-kit">Kit de întreținere inclus</li>
         </ul>
-        <button class="btn-pkg btn-blue" data-i18n="btn-pkg2" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Săptămâna Aventurii</button>
+        <button class="btn-pkg btn-dark" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="btn-rezerva">Rezervă Acum</button>
         <div class="pinstant" data-i18n="instant">🕐 Rezervare instantanee</div>
       </div>
-      <div class="pcard" id="pkg3" onclick="selectPkg(3)">
-        <div class="pdur" data-i18n="pkg3-dur">📅 14+ zile</div>
-        <div class="pname" data-i18n="pkg3-name">Vacanța Lungă</div>
-        <div class="pdesc" data-i18n="pkg3-desc">Pentru cei care vor să exploreze în detaliu</div>
-        <div class="pprice"><span id="p3">100</span><span class="peuro">€</span> <span class="punit">/zi</span></div>
-        <div class="ptrans">⚙️ <span id="pt3">Cutie manuală</span></div>
+      <div class="pcard pop" style="cursor:default">
+        <div class="pop-badge" data-i18n="pop-badge">Recomandat</div>
+        <div class="pname" data-i18n="card-auto-name">Benimar S344 UP</div>
+        <div class="pdesc" data-i18n="card-auto-sub">Cutie Automată</div>
+        <div style="margin:22px 0 18px;display:flex;flex-direction:column;gap:10px">
+          <div style="background:var(--primary-light);border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px" data-i18n="lbl-sezon-short">🌞 Sezon (15 iun – 15 sep)</div>
+            <div class="pprice" style="margin:0"><span>170</span><span class="peuro">€</span><span class="punit"> /zi</span></div>
+          </div>
+          <div style="background:var(--bg);border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px" data-i18n="lbl-extra-short">❄️ Extrasezon</div>
+            <div class="pprice" style="margin:0"><span>140</span><span class="peuro">€</span><span class="punit"> /zi</span></div>
+          </div>
+        </div>
         <ul class="pfeats">
-          <li data-i18n="pf-3f">Combustibil inclus (300 km/zi)</li>
-          <li data-i18n="pf-casco3">Asigurare CASCO premium</li>
+          <li data-i18n="pf-casco">Asigurare CASCO</li>
           <li data-i18n="pf-equip">Echipament complet</li>
           <li data-i18n="pf-assist">Asistență rutieră 24/7</li>
           <li data-i18n="pf-clean">Curățenie finală</li>
           <li data-i18n="pf-gps">GPS cu hărți offline</li>
-          <li data-i18n="pf-kit">Kit de întreținere inclus</li>
-          <li data-i18n="pf-bikes">Biciclete pliabile (2 buc)</li>
-          <li data-i18n="pf-discount">Reducere pentru rezervări lungi</li>
         </ul>
-        <button class="btn-pkg btn-dark" data-i18n="btn-pkg3" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Rezervă Vacanța Lungă</button>
+        <button class="btn-pkg btn-blue" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="btn-rezerva">Rezervă Acum</button>
         <div class="pinstant" data-i18n="instant">🕐 Rezervare instantanee</div>
       </div>
     </div>
@@ -1029,6 +1021,8 @@ var TRANS = {
     'total-lbl':'Total estimat','btn-book-now2':'Rezervă Acum →',
     'info-title':'Informații Importante','info-1':'Check-in: 14:00 - 18:00','info-2':'Check-out: 08:00 - 11:00','info-3':'Rezervare minimă: 5 zile','info-4':'Confirmare instantanee',
     'side-sezon':'Perioadă','side-pricepzi':'Preț/zi','lbl-sezon':'Sezon','lbl-extrasezon':'Extrasezon','lbl-mixt':'Sezon + Extrasezon',
+    'card-manual-name':'Benimar S344 UP','card-manual-sub':'Cutie Manuală','card-auto-name':'Benimar S344 UP','card-auto-sub':'Cutie Automată',
+    'lbl-sezon-short':'🌞 Sezon (15 iun – 15 sep)','lbl-extra-short':'❄️ Extrasezon','btn-rezerva':'Rezervă Acum',
     'alert-min':'Perioada minimă de închiriere este de 5 zile.',
     'prices-title':'Prețuri transparente, fără costuri ascunse','prices-desc':'Alege pachetul care se potrivește perfect cu planurile tale de vacanță. Toate prețurile includ asigurarea și echipamentul complet.',
     'pop-badge':'Cel mai popular',
@@ -1126,6 +1120,8 @@ var TRANS = {
     'days-unit':'days','img-of':'of','img-unit':'images','send-loading':'⏳ Sending...',
     'alert-fields':'Please fill in all required fields (*)','alert-min':'Minimum rental period is 5 days.','alert-blocked':'The selected period contains already blocked days. Please choose a continuous available interval.','alert-blocked2':'The selected period contains blocked days. Please choose different dates.','alert-error':'Sending error. Call +40 766 199 007 or try again.',
     'side-sezon':'Period','side-pricepzi':'Price/day','lbl-sezon':'Season','lbl-extrasezon':'Off-season','lbl-mixt':'Season + Off-season',
+    'card-manual-name':'Benimar S344 UP','card-manual-sub':'Manual Transmission','card-auto-name':'Benimar S344 UP','card-auto-sub':'Automatic Transmission',
+    'lbl-sezon-short':'🌞 Season (15 Jun – 15 Sep)','lbl-extra-short':'❄️ Off-season','btn-rezerva':'Book Now',
     'ext-caps':['Front View - Modern Design','Side View','Front Exterior','Rear Exterior','Modern Design','Full View'],
     'int-caps':['Relaxation Area','Comfortable Bedroom','Private Bathroom','Interior Space'],
     'months':['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -1553,7 +1549,7 @@ function isSezon(dateObj) {
 function getDayRate(dateObj) {
   return isSezon(dateObj)
     ? (selectedCamper === 'automat' ? 170 : 160)
-    : (selectedCamper === 'automat' ? 140 : 130);
+    : (selectedCamper === 'automat' ? 140 : 140);
 }
 
 function updateCalPrice() {
@@ -1592,7 +1588,7 @@ function updateCalPrice() {
 
   var sezonLabel, pricePerDay;
   var rateSezon = selectedCamper === 'automat' ? 170 : 160;
-  var rateExtra = selectedCamper === 'automat' ? 140 : 130;
+  var rateExtra = 140;
   if (sezonDays === 0) {
     sezonLabel = t('lbl-extrasezon');
     pricePerDay = rateExtra + '€';
